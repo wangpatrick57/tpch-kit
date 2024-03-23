@@ -1,70 +1,101 @@
--- Sccsid:     @(#)dss.ddl	2.1.8.1
-CREATE TABLE NATION  ( N_NATIONKEY  INTEGER NOT NULL,
-                            N_NAME       CHAR(25) NOT NULL,
-                            N_REGIONKEY  INTEGER NOT NULL,
-                            N_COMMENT    VARCHAR(152));
+DROP TABLE IF EXISTS nation CASCADE;
+DROP TABLE IF EXISTS region CASCADE;
+DROP TABLE IF EXISTS part CASCADE;
+DROP TABLE IF EXISTS supplier CASCADE;
+DROP TABLE IF EXISTS partsupp CASCADE;
+DROP TABLE IF EXISTS orders CASCADE;
+DROP TABLE IF EXISTS customer CASCADE;
+DROP TABLE IF EXISTS lineitem CASCADE;
 
-CREATE TABLE REGION  ( R_REGIONKEY  INTEGER NOT NULL,
-                            R_NAME       CHAR(25) NOT NULL,
-                            R_COMMENT    VARCHAR(152));
+CREATE TABLE region (
+    r_regionkey integer  NOT NULL,
+    r_name      char(25) NOT NULL,
+    r_comment   varchar(152),
+    PRIMARY KEY (r_regionkey)
+);
 
-CREATE TABLE PART  ( P_PARTKEY     INTEGER NOT NULL,
-                          P_NAME        VARCHAR(55) NOT NULL,
-                          P_MFGR        CHAR(25) NOT NULL,
-                          P_BRAND       CHAR(10) NOT NULL,
-                          P_TYPE        VARCHAR(25) NOT NULL,
-                          P_SIZE        INTEGER NOT NULL,
-                          P_CONTAINER   CHAR(10) NOT NULL,
-                          P_RETAILPRICE DECIMAL(15,2) NOT NULL,
-                          P_COMMENT     VARCHAR(23) NOT NULL );
+CREATE TABLE nation (
+    n_nationkey integer  NOT NULL,
+    n_name      char(25) NOT NULL,
+    n_regionkey integer  NOT NULL,
+    n_comment   varchar(152),
+    PRIMARY KEY (n_nationkey)
+);
 
-CREATE TABLE SUPPLIER ( S_SUPPKEY     INTEGER NOT NULL,
-                             S_NAME        CHAR(25) NOT NULL,
-                             S_ADDRESS     VARCHAR(40) NOT NULL,
-                             S_NATIONKEY   INTEGER NOT NULL,
-                             S_PHONE       CHAR(15) NOT NULL,
-                             S_ACCTBAL     DECIMAL(15,2) NOT NULL,
-                             S_COMMENT     VARCHAR(101) NOT NULL);
+CREATE TABLE part (
+    p_partkey     integer        NOT NULL,
+    p_name        varchar(55)    NOT NULL,
+    p_mfgr        char(25)       NOT NULL,
+    p_brand       char(10)       NOT NULL,
+    p_type        varchar(25)    NOT NULL,
+    p_size        integer        NOT NULL,
+    p_container   char(10)       NOT NULL,
+    p_retailprice decimal(15, 2) NOT NULL,
+    p_comment     varchar(23)    NOT NULL,
+    PRIMARY KEY (p_partkey)
+);
 
-CREATE TABLE PARTSUPP ( PS_PARTKEY     INTEGER NOT NULL,
-                             PS_SUPPKEY     INTEGER NOT NULL,
-                             PS_AVAILQTY    INTEGER NOT NULL,
-                             PS_SUPPLYCOST  DECIMAL(15,2)  NOT NULL,
-                             PS_COMMENT     VARCHAR(199) NOT NULL );
+CREATE TABLE supplier (
+    s_suppkey   integer        NOT NULL,
+    s_name      char(25)       NOT NULL,
+    s_address   varchar(40)    NOT NULL,
+    s_nationkey integer        NOT NULL,
+    s_phone     char(15)       NOT NULL,
+    s_acctbal   decimal(15, 2) NOT NULL,
+    s_comment   varchar(101)   NOT NULL,
+    PRIMARY KEY (s_suppkey)
+);
 
-CREATE TABLE CUSTOMER ( C_CUSTKEY     INTEGER NOT NULL,
-                             C_NAME        VARCHAR(25) NOT NULL,
-                             C_ADDRESS     VARCHAR(40) NOT NULL,
-                             C_NATIONKEY   INTEGER NOT NULL,
-                             C_PHONE       CHAR(15) NOT NULL,
-                             C_ACCTBAL     DECIMAL(15,2)   NOT NULL,
-                             C_MKTSEGMENT  CHAR(10) NOT NULL,
-                             C_COMMENT     VARCHAR(117) NOT NULL);
+CREATE TABLE partsupp (
+    ps_partkey    integer        NOT NULL,
+    ps_suppkey    integer        NOT NULL,
+    ps_availqty   integer        NOT NULL,
+    ps_supplycost decimal(15, 2) NOT NULL,
+    ps_comment    varchar(199)   NOT NULL,
+    PRIMARY KEY (ps_partkey, ps_suppkey)
+);
 
-CREATE TABLE ORDERS  ( O_ORDERKEY       INTEGER NOT NULL,
-                           O_CUSTKEY        INTEGER NOT NULL,
-                           O_ORDERSTATUS    CHAR(1) NOT NULL,
-                           O_TOTALPRICE     DECIMAL(15,2) NOT NULL,
-                           O_ORDERDATE      DATE NOT NULL,
-                           O_ORDERPRIORITY  CHAR(15) NOT NULL,  
-                           O_CLERK          CHAR(15) NOT NULL, 
-                           O_SHIPPRIORITY   INTEGER NOT NULL,
-                           O_COMMENT        VARCHAR(79) NOT NULL);
+CREATE TABLE customer (
+    c_custkey    integer        NOT NULL,
+    c_name       varchar(25)    NOT NULL,
+    c_address    varchar(40)    NOT NULL,
+    c_nationkey  integer        NOT NULL,
+    c_phone      char(15)       NOT NULL,
+    c_acctbal    decimal(15, 2) NOT NULL,
+    c_mktsegment char(10)       NOT NULL,
+    c_comment    varchar(117)   NOT NULL,
+    PRIMARY KEY (c_custkey)
+);
 
-CREATE TABLE LINEITEM ( L_ORDERKEY    INTEGER NOT NULL,
-                             L_PARTKEY     INTEGER NOT NULL,
-                             L_SUPPKEY     INTEGER NOT NULL,
-                             L_LINENUMBER  INTEGER NOT NULL,
-                             L_QUANTITY    DECIMAL(15,2) NOT NULL,
-                             L_EXTENDEDPRICE  DECIMAL(15,2) NOT NULL,
-                             L_DISCOUNT    DECIMAL(15,2) NOT NULL,
-                             L_TAX         DECIMAL(15,2) NOT NULL,
-                             L_RETURNFLAG  CHAR(1) NOT NULL,
-                             L_LINESTATUS  CHAR(1) NOT NULL,
-                             L_SHIPDATE    DATE NOT NULL,
-                             L_COMMITDATE  DATE NOT NULL,
-                             L_RECEIPTDATE DATE NOT NULL,
-                             L_SHIPINSTRUCT CHAR(25) NOT NULL,
-                             L_SHIPMODE     CHAR(10) NOT NULL,
-                             L_COMMENT      VARCHAR(44) NOT NULL);
+CREATE TABLE orders (
+    o_orderkey      integer        NOT NULL,
+    o_custkey       integer        NOT NULL,
+    o_orderstatus   char(1)        NOT NULL,
+    o_totalprice    decimal(15, 2) NOT NULL,
+    o_orderdate     date           NOT NULL,
+    o_orderpriority char(15)       NOT NULL,
+    o_clerk         char(15)       NOT NULL,
+    o_shippriority  integer        NOT NULL,
+    o_comment       varchar(79)    NOT NULL,
+    PRIMARY KEY (o_orderkey)
+);
 
+CREATE TABLE lineitem (
+    l_orderkey      integer        NOT NULL,
+    l_partkey       integer        NOT NULL,
+    l_suppkey       integer        NOT NULL,
+    l_linenumber    integer        NOT NULL,
+    l_quantity      decimal(15, 2) NOT NULL,
+    l_extendedprice decimal(15, 2) NOT NULL,
+    l_discount      decimal(15, 2) NOT NULL,
+    l_tax           decimal(15, 2) NOT NULL,
+    l_returnflag    char(1)        NOT NULL,
+    l_linestatus    char(1)        NOT NULL,
+    l_shipdate      date           NOT NULL,
+    l_commitdate    date           NOT NULL,
+    l_receiptdate   date           NOT NULL,
+    l_shipinstruct  char(25)       NOT NULL,
+    l_shipmode      char(10)       NOT NULL,
+    l_comment       varchar(44)    NOT NULL,
+    PRIMARY KEY (l_orderkey, l_linenumber)
+);
